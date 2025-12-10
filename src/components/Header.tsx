@@ -1,9 +1,13 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -18,11 +22,11 @@ const Header = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <Link to="/" className="flex-shrink-0">
             <h1 className="text-xl sm:text-2xl font-bold bg-gradient-cosmic bg-clip-text text-transparent">
               EMERGING SOFTWARE
             </h1>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -45,11 +49,27 @@ const Header = () => {
               About
             </button>
             <button
+              onClick={() => scrollToSection('blog')}
+              className="text-foreground/80 hover:text-foreground transition-colors text-sm font-medium"
+            >
+              Blog
+            </button>
+            <button
               onClick={() => scrollToSection('contact')}
               className="text-foreground/80 hover:text-foreground transition-colors text-sm font-medium"
             >
               Contact
             </button>
+            {isAdmin && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/admin')}
+              >
+                <User className="w-4 h-4 mr-2" />
+                Admin
+              </Button>
+            )}
             <Button
               onClick={() => scrollToSection('contact')}
               className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-glow"
@@ -89,11 +109,32 @@ const Header = () => {
               About
             </button>
             <button
+              onClick={() => scrollToSection('blog')}
+              className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors"
+            >
+              Blog
+            </button>
+            <button
               onClick={() => scrollToSection('contact')}
               className="block w-full text-left px-4 py-2 text-foreground/80 hover:text-foreground hover:bg-muted/50 rounded-lg transition-colors"
             >
               Contact
             </button>
+            {isAdmin && (
+              <div className="px-4">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    navigate('/admin');
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Admin Dashboard
+                </Button>
+              </div>
+            )}
             <div className="px-4">
               <Button
                 onClick={() => scrollToSection('contact')}
